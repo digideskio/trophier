@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trophier</title>
+    <link rel="stylesheet" href="normalize.css"/>
+    <link rel="stylesheet" href="foundation.css"/>
+    <style>
+.top > div {
+  background: #2ba6cb;
+  color: #e9e9e9;
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.top > div:hover {
+  background: #222;
+}
+
+table {
+  width: 100%;
+}
+
+td small {
+  font-size: 1.0em;
+  font-style: italic;
+  color: #777;
+}
+
+tr.hidden {
+  opacity: 0.75;
+}
+
+tr.hidden:hover {
+  opacity: 1;
+}
+
+#logo img {
+  height: 100px;
+  width: 182px;
+}
+
+#logo {
+  height: 100px;
+  width: 182px;
+}
+
+tbody tr td:first-child {
+  text-align: center;
+}
+
+tbody td:first-child img {
+  height: 80px;
+  width: 80px;
+}
+
+tbody td:last-child {
+  text-align: center;
+}
+
+tbody td:last-child, tbody td:last-child img {
+  width: 64px;
+}
+    </style>
+  </head>
+  <body>
+    <div class="row top">
+      <div class="small-4 large-4 columns" id="select">Select .TRP</div>
+      <div class="small-4 large-4 columns" id="dumpI">Dump icons</div>
+      <div class="small-4 large-4 columns" id="dump">Dump everything</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <td id="logo"></td>
+          <td id="name" colspan="2"><span>Trophier</span><br/><small>Version 1.0.0</small></td>
+        </tr>
+        <tr>
+          <td>Icon</td>
+          <td>Name</td>
+          <td>Type</td>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <script src="jquery.js"></script>
+    <script>
+var dumpFolder = document.createElement("input"), selectTRP = document.createElement("input");
+dumpFolder.nwdirectory = true;
+selectTRP.type = dumpFolder.type = "file";
+var Trophy = require("../lib/trophy.js");
+var $select = $("#select"), $dumpIcons = $("#dumpI"), $dump = $("#dump");
+$select.click(function() {
+  $(selectTRP).click();
+});
+
+$dumpIcons.click(function() {
+  $(dumpFolder).attr("data-icons", "1").click();
+});
+
+$dump.click(function() {
+  $(dumpFolder).attr("data-icons", "0").click();
+});
+
+$(dumpFolder).on("change", function() {
+  if(typeof window._trophy === undefined) {
+    alert("Select a .TRP first!");
+  } else {
+    window._trophy.dump(dumpFolder.value.trim(), $(dumpFolder).attr("data-icons") == "1");
+  }
+});
+
+$(selectTRP).on("change", function() {
+  var val = selectTRP.value.trim();
+  if(val.length > 0) {
+    try {
+      new Trophy(val, display);
+    } catch(e) {
+      alert(e.message);
+    }
+  } else {
+    //cancel?
+  }
+});
+
+var addTrophy = function(trop) {
+  var tr = $("<tr>");
+  if(trop.hidden) tr.addClass("hidden");
+  tr.append($("<td>").append($("<img>").attr("src", trop.embed())));
+  tr.append($("<td>").append($("<span>").html(trop.name)).append($("<br/>")).append($("<small>").html(trop.description)));
+  tr.append($("<td>").append($("<img>").attr("src", trop.type.toLowerCase()+".png")));
+  $("tbody").append(tr);
+};
+
+var display = function(trophy) {
+  $("tbody").empty();
+  $("#logo").empty().append($("<img>").attr("src", trophy.icon()));
+  $("#name span").html(trophy.title);
+  $("#name small").html(trophy.detail);
+
+  var i = 0;
+  window._trophy = trophy;
+  for(var i = 0; i < trophy.trophies.length; ++i) {
+    addTrophy(trophy.trophies[i]);
+  }
+};
+    </script>
+  </body>
+</html>

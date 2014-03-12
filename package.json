@@ -2,7 +2,7 @@
   "name": "trophier",
   "version": "0.0.0",
   "description": "A PS3 TRP File Viewer entirely written in node.js using node-webkit for the graphical interface.",
-  "main": "index.js",
+  "main": "app/app.html",
   "repository": {
     "type": "git",
     "url": "https://github.com/polar-bear/trophier.git"
@@ -14,5 +14,19 @@
   },
   "dependencies": {
     "xml2js": "~0.4.1"
+  },
+  "window": {
+    "title": "Trophier",
+    "icon": "app/gold.png",
+    "toolbar": false,
+    "frame": true,
+    "width": 800,
+    "height": 600,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200
+  },
+  "webkit": {
+    "plugin": true
   }
 }

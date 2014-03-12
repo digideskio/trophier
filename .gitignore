@@ -1,2 +1,6 @@
 node_modules
 *.TRP
+*.dll
+nw
+*.exe
+nw.pak
